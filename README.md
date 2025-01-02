@@ -12,3 +12,8 @@ https://zenn.dev/luvmini511/articles/ec0e874a2cc1f1
 
 ディレクトリ構造  
 https://qiita.com/miumi/items/359b8a77bbb6f9666950
+
+### テストユーザー
+
+test@test2.com
+testTest9999

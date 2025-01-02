@@ -2,28 +2,33 @@
 
 import { useState } from "react";
 import { login, register } from "@/lib/firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	const router = useRouter();
+
 	const handleLogin = async () => {
 		try {
 			await login(email, password);
-			alert("Logged in successfully!");
+			router.push("/chat");
 		} catch (error) {
-			console.error("Login failed:", error);
-			alert("Failed to login.");
+			alert("Failed to login: " + error);
 		}
 	};
 
 	const handleRegister = async () => {
 		try {
 			await register(email, password);
+			await login(email, password);
+			setEmail("");
+			setPassword("");
 			alert("Registered successfully!");
+			router.push("/chat");
 		} catch (error) {
-			console.error("Registration failed:", error);
-			alert("Failed to register.");
+			alert("Failed to register: " + error);
 		}
 	};
 
