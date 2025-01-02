@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -11,4 +12,31 @@
       "**/node_modules/**"
     ]
   }
+=======
+	"firestore": {
+		"rules": "firestore.rules",
+		"indexes": "firestore.indexes.json"
+	},
+	"hosting": {
+		"public": "out",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+	},
+	"functions": [
+		{
+			"source": "functions",
+			"codebase": "default",
+			"ignore": [
+				"node_modules",
+				".git",
+				"firebase-debug.log",
+				"firebase-debug.*.log",
+				"*.local"
+			],
+			"predeploy": [
+				"npm --prefix \"$RESOURCE_DIR\" run lint",
+				"npm --prefix \"$RESOURCE_DIR\" run build"
+			]
+		}
+	]
+>>>>>>> parent of de74e9e (再度デプロイ)
 }
