@@ -1,7 +1,13 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config";
 
-export const observeAuthState = (callback: (user: any) => void) => {
+type User = {
+	uid: string;
+	email: string | null;
+	displayName: string | null;
+} | null;
+
+export const observeAuthState = (callback: (user: User) => void) => {
 	onAuthStateChanged(auth, (user) => {
 		callback(user);
 	});
