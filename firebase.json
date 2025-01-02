@@ -19,6 +19,7 @@
     ]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   }
 =======
 	"firestore": {
@@ -72,4 +73,7 @@
 >>>>>>> parent of 4262e95 (デプロイ修正)
 =======
 >>>>>>> parent of 4262e95 (デプロイ修正)
+=======
+  }
+>>>>>>> parent of 966ee96 (Firebase hosting)
 }
