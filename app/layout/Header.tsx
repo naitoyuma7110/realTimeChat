@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { useAuth } from "@/app/feature/auth/context/auth-context";
 import { logout } from "@/lib/firebase/auth";
+import { Button, Avatar, Spinner, Stack } from "@chakra-ui/react";
 
 const Header = () => {
-	const { user } = useAuth();
+	const { user, loading } = useAuth();
 
 	const handleLogout = async () => {
 		try {
@@ -14,26 +15,37 @@ const Header = () => {
 	};
 
 	return (
-		<header className="flex justify-between items-center p-4 bg-gray-200">
+		<header className="flex justify-between items-center p-4 border-b">
 			<Link href="/chat" className="text-xl font-bold">
 				<button>Chat App</button>
 			</Link>
 			<nav>
-				{!user ? (
-					<Link href="/login">
-						<button className="px-4 py-2 bg-blue-500 text-white rounded">
-							Login
-						</button>
-					</Link>
+				{!loading ? (
+					!user ? (
+						<Link href="/login">
+							<Button size="sm" colorScheme="teal" variant="solid">
+								Login
+							</Button>
+						</Link>
+					) : (
+						<Stack spacing={4} direction="row" align="center">
+							<Button
+								size="sm"
+								colorScheme="red"
+								onClick={handleLogout}
+								className="items-center">
+								LOGOUT
+							</Button>
+							<Avatar
+								size="sm"
+								name={user.email || "Who"}
+								bg="teal.500"
+								color="white"
+							/>
+						</Stack>
+					)
 				) : (
-					<div className="flex items-center gap-2">
-						<span className="text-gray-700">Welcome, {user.email}</span>
-						<button
-							onClick={handleLogout}
-							className="px-4 py-2 bg-red-500 text-white rounded">
-							Logout
-						</button>
-					</div>
+					<Spinner color="gray.500" />
 				)}
 			</nav>
 		</header>

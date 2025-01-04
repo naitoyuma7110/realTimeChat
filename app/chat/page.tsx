@@ -10,11 +10,12 @@ import {
 import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/app/feature/auth/context/auth-context";
 import AuthGuard from "@/app/feature/auth/AuthGurd";
-import { Spinner } from "@chakra-ui/react";
+import { Avatar } from "@chakra-ui/react";
 
 interface Message {
 	id: string;
 	user: string;
+	uid: string;
 	text: string;
 	timestamp: number;
 }
@@ -24,7 +25,6 @@ export default function ChatPage() {
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
-	const [currentUser] = useState(user?.email || "Who");
 
 	useEffect(() => {
 		const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
@@ -39,13 +39,18 @@ export default function ChatPage() {
 		return () => unsubscribe();
 	}, []);
 
+	const isMe = (uid: string) => {
+		return user?.uid === uid;
+	};
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!newMessage.trim()) return;
 
 		try {
 			await addDoc(collection(db, "messages"), {
-				user: currentUser,
+				user: user?.email,
+				uid: user?.uid,
 				text: newMessage,
 				timestamp: Date.now(),
 			});
@@ -58,13 +63,37 @@ export default function ChatPage() {
 	return (
 		<AuthGuard>
 			<div className="flex flex-col h-screen">
-				<Spinner color="red.500" />
 				<div className="flex-grow overflow-y-auto p-4">
-					{messages.map((message) => (
-						<div key={message.id} className="mb-2">
-							<strong>{message.user}:</strong> {message.text}
-						</div>
-					))}
+					{messages.map((message) =>
+						isMe(message.uid) ? (
+							<div key={message.id} className="mb-2 flex">
+								<Avatar
+									size="sm"
+									name={message.user}
+									bg="teal.500"
+									color="white"
+								/>
+								<div className="ml-2">
+									<strong>{message.user} (Me)</strong>
+									<p className="whitespace-pre-wrap">
+										{message.text}
+										aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+										aaaaaaaaaaaaaaaaaaaaaaaaa
+									</p>
+								</div>
+							</div>
+						) : (
+							<div key={message.id} className="mb-2 flex items-center">
+								<Avatar
+									size="sm"
+									name={message.user}
+									bg="gray.500"
+									color="white"
+								/>
+								<strong>{message.user}:</strong> {message.text}
+							</div>
+						)
+					)}
 				</div>
 				<form onSubmit={handleSubmit} className="flex p-4 border-t">
 					<input

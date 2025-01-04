@@ -16,7 +16,7 @@ export default function RootLayout({
 				<Providers>
 					<AuthProvider>
 						<Header />
-						<main className="p-4">{children}</main>
+						<main>{children}</main>
 					</AuthProvider>
 				</Providers>
 			</body>
