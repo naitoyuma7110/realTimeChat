@@ -7,10 +7,10 @@ const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!user) {
+		if (!loading && !user) {
 			router.push("/login");
 		}
-	}, [user, router]);
+	}, [loading, user, router]);
 
 	if (loading) return <p>Loading...</p>;
 

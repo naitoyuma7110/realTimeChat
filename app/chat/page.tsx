@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import {
 	collection,
@@ -11,6 +10,7 @@ import {
 import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/app/feature/auth/context/auth-context";
 import AuthGuard from "@/app/feature/auth/AuthGurd";
+import { Spinner } from "@chakra-ui/react";
 
 interface Message {
 	id: string;
@@ -25,9 +25,6 @@ export default function ChatPage() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 	const [currentUser] = useState(user?.email || "Who");
-
-	console.log(user);
-	console.log(currentUser);
 
 	useEffect(() => {
 		const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
@@ -61,6 +58,7 @@ export default function ChatPage() {
 	return (
 		<AuthGuard>
 			<div className="flex flex-col h-screen">
+				<Spinner color="red.500" />
 				<div className="flex-grow overflow-y-auto p-4">
 					{messages.map((message) => (
 						<div key={message.id} className="mb-2">

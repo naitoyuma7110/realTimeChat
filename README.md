@@ -13,6 +13,11 @@ https://zenn.dev/luvmini511/articles/ec0e874a2cc1f1
 ディレクトリ構造  
 https://qiita.com/miumi/items/359b8a77bbb6f9666950
 
+### Chakra UI
+
+setup ChakraProvider
+https://stackoverflow.com/questions/79148516/property-value-is-missing-in-type-children-element-but-required-in-typ
+
 ### テストユーザー
 
 test@test2.com
