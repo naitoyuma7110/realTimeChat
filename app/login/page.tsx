@@ -11,7 +11,6 @@ export default function LoginPage() {
 	const router = useRouter();
 
   const handleLogin = async () => {
-    return
 		try {
 			await login(email, password);
 			router.push("/chat");
@@ -20,7 +19,9 @@ export default function LoginPage() {
 		}
 	};
 
-	const handleRegister = async () => {
+  const handleRegister = async () => {
+    return
+
 		try {
 			await register(email, password);
 			await login(email, password);
@@ -75,8 +76,9 @@ export default function LoginPage() {
           <p>password: sample2Sample</p>
         </div>
       </div>
-      <div className="text-gray-400 text-xs">
-      <p>※ユーザー登録は一時停止中！</p>
+      <div className="text-gray-600 text-xs">
+      <p>チャット連打しないでね(´ω｀)</p>
+      <p>ユーザー登録は一時停止中</p>
       </div>
 		</div>
 	);
