@@ -10,7 +10,8 @@ export default function LoginPage() {
 
 	const router = useRouter();
 
-	const handleLogin = async () => {
+  const handleLogin = async () => {
+    return
 		try {
 			await login(email, password);
 			router.push("/chat");
@@ -55,12 +56,28 @@ export default function LoginPage() {
 					className="w-full px-4 py-2 bg-blue-500 text-white rounded">
 					Login
 				</button>
-				<button
+        <button
+          disabled={true}
 					onClick={handleRegister}
-					className="w-full px-4 py-2 bg-gray-500 text-white rounded">
+					className="w-full px-4 py-2 bg-gray-200 text-white rounded">
 					Register
 				</button>
-			</div>
+      </div>
+      <div className="py-2 flex-col flex gap-y-2 my-2">
+        <div className="border p-4 rounded-lg">
+          <p>サンプルユーザー1</p>
+          <p>email: sample@sample.com</p>
+          <p>password: sampleSample</p>
+        </div>
+        <div className="border p-4 rounded-lg">
+          <p>サンプルユーザー2</p>
+          <p>email: sample2@sample.com</p>
+          <p>password: sample2Sample</p>
+        </div>
+      </div>
+      <div className="text-gray-400 text-xs">
+      <p>※ユーザー登録は一時停止中！</p>
+      </div>
 		</div>
 	);
 }

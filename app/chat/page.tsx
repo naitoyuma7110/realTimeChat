@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	collection,
 	query,
@@ -11,6 +11,8 @@ import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/app/feature/auth/context/auth-context";
 import AuthGuard from "@/app/feature/auth/AuthGurd";
 import { Avatar } from "@chakra-ui/react";
+import { getFormattedRelativeTime } from '../../lib/dayjs/date';
+
 
 interface Message {
 	id: string;
@@ -25,6 +27,24 @@ export default function ChatPage() {
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const adjustHeight = () => {
+		const textarea = textareaRef.current;
+		if (textarea) {
+			textarea.style.height = "auto";
+			textarea.style.height = `${textarea.scrollHeight}px`;
+		}
+	};
+
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages]);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
 
 	useEffect(() => {
 		const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
@@ -34,8 +54,8 @@ export default function ChatPage() {
 				...doc.data(),
 			})) as Message[];
 			setMessages(loadedMessages);
-		});
-
+    });
+    
 		return () => unsubscribe();
 	}, []);
 
@@ -55,6 +75,7 @@ export default function ChatPage() {
 				timestamp: Date.now(),
 			});
 			setNewMessage("");
+			adjustHeight();
 		} catch (error) {
 			console.error("Error sending message:", error);
 		}
@@ -62,51 +83,67 @@ export default function ChatPage() {
 
 	return (
 		<AuthGuard>
-			<div className="flex flex-col h-screen">
-				<div className="flex-grow overflow-y-auto p-4">
+			<div className="flex flex-col max-w-2xl mx-auto">
+				<div className="overflow-y-auto p-4">
 					{messages.map((message) =>
 						isMe(message.uid) ? (
-							<div key={message.id} className="mb-2 flex">
+							<div key={message.id} className="flex py-2 w-full">
 								<Avatar
 									size="sm"
 									name={message.user}
 									bg="teal.500"
 									color="white"
 								/>
-								<div className="ml-2">
-									<strong>{message.user} (Me)</strong>
-									<p className="whitespace-pre-wrap">
-										{message.text}
-										aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-										aaaaaaaaaaaaaaaaaaaaaaaaa
-									</p>
+                <div className="ml-4 border rounded-md min-w-[200px] px-4 py-2">
+                  <p className="text-gray-300 text-xs">{getFormattedRelativeTime(message.timestamp)}</p>
+									<p className="text-gray-500">{message.user} (Me)</p>
+									<p className="whitespace-pre-line">{message.text}</p>
 								</div>
 							</div>
 						) : (
-							<div key={message.id} className="mb-2 flex items-center">
+							<div key={message.id} className="flex justify-end w-full py-2">
+                  <div className="mr-4 border rounded-md min-w-[100px] px-4 py-2">
+                  <p className="text-gray-300 text-xs">{getFormattedRelativeTime(message.timestamp)}</p>
+									<p className="text-gray-500 text-end">{message.user}</p>
+									<p className="whitespace-pre-line">{message.text}</p>
+								</div>
 								<Avatar
 									size="sm"
 									name={message.user}
 									bg="gray.500"
 									color="white"
 								/>
-								<strong>{message.user}:</strong> {message.text}
 							</div>
 						)
 					)}
+					<div ref={messagesEndRef} />
 				</div>
-				<form onSubmit={handleSubmit} className="flex p-4 border-t">
-					<input
-						type="text"
+				<form
+					onSubmit={handleSubmit}
+					className="flex bg-white rounded-lg border p-2 mt-20 sticky bottom-0">
+					<textarea
+						ref={textareaRef}
 						value={newMessage}
-						onChange={(e) => setNewMessage(e.target.value)}
+						onChange={(e) => {
+							setNewMessage(e.target.value);
+							adjustHeight();
+						}}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && !e.shiftKey) {
+								e.preventDefault();
+								handleSubmit(e);
+							}
+						}}
 						placeholder="Type your message..."
-						className="flex-grow border rounded px-2 py-1 mr-2"
+						className="outline-non flex-grow rounded px-2 py-1 mr-2 resize-none"
+						rows={1}
+						style={{ minHeight: "30px" }}
 					/>
+
 					<button
 						type="submit"
 						className="bg-blue-500 text-white px-4 py-1 rounded">
-						Send
+						送信
 					</button>
 				</form>
 			</div>
