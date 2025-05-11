@@ -17,8 +17,3 @@ https://qiita.com/miumi/items/359b8a77bbb6f9666950
 
 setup ChakraProvider
 https://stackoverflow.com/questions/79148516/property-value-is-missing-in-type-children-element-but-required-in-typ
-
-### テストユーザー
-
-test@test2.com
-testTest9999
